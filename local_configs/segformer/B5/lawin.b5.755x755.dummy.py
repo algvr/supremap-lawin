@@ -15,7 +15,7 @@ img_norm_cfg = dict(
 crop_size = (640, 640)
 train_pipeline = [
     dict(type='LoadImageFromFile'),
-    dict(type='LoadAnnotations', reduce_zero_label=True),
+    dict(type='LoadAnnotations', reduce_zero_label=False),
     dict(type='Resize', img_scale=(640, 640), ratio_range=(1.0, 1.0)),
     dict(type='RandomCrop', crop_size=crop_size, cat_max_ratio=0.75),
     dict(type='RandomFlip', prob=0.5),
