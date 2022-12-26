@@ -136,6 +136,8 @@ def main():
 
     logger.info(model)
 
+    cfg.data.train.img_norm_cfg = cfg._cfg_dict['img_norm_cfg']
+    
     datasets = [build_dataset(cfg.data.train)]
 
     if len(cfg.workflow) == 2:

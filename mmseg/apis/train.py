@@ -10,6 +10,7 @@ from mmseg.core import DistEvalHook, EvalHook
 from mmseg.datasets import build_dataloader, build_dataset
 from mmseg.utils import get_root_logger
 
+import wandb
 
 def set_random_seed(seed, deterministic=False):
     """Set random seed.
@@ -97,6 +98,7 @@ def train_segmentor(model,
     # register eval hooks
     if validate:
         val_dataset = build_dataset(cfg.data.val, dict(test_mode=True))
+        val_dataset.img_norm_cfg = getattr(dataset[0], 'img_norm_cfg', None)
         val_dataloader = build_dataloader(
             val_dataset,
             samples_per_gpu=1,

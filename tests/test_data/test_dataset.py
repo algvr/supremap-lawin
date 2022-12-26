@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 
 from mmseg.core.evaluation import get_classes, get_palette
-from mmseg.datasets import (DATASETS, ADE20KDataset, CityscapesDataset,
+from mmseg.datasets import (DATASETS, ADE20KDataset, CityscapesDataset, DummyDataset,
                             ConcatDataset, CustomDataset, PascalVOCDataset,
                             RepeatDataset)
 

@@ -1,8 +1,11 @@
+import os
 import os.path as osp
 
 from mmcv.runner import Hook
+import time
+import torch
+import torch.nn.functional as F
 from torch.utils.data import DataLoader
-
 
 class EvalHook(Hook):
     """Evaluation hook.
@@ -90,6 +93,29 @@ class DistEvalHook(EvalHook):
         if runner.rank == 0:
             print('\n')
             self.evaluate(runner, results)
+            imgs = iter(self.dataloader)
+            output_dir = osp.join('output_imgs', runner.timestamp, f'iter_{"%05i" % runner.iter}')
+            os.makedirs(output_dir, exist_ok=True)
+            norm_cfg = self.dataloader.dataset.img_norm_cfg
+            norm_cfg_means, norm_cfg_stds = None, None
+            for idx, pair in enumerate(zip(imgs, results)):
+                img, result = pair
+                result = torch.tensor(result)
+                output_fn = osp.join(output_dir, f'{"%05i" % idx}.png')
+                input_img_torch = img['img'][0][0].permute((1, 2, 0))
+                
+                # denormalize
+                if None in {norm_cfg_means, norm_cfg_stds}:    
+                    norm_cfg_means = torch.tensor(norm_cfg['mean']).view(1, 1, 3).repeat((*input_img_torch.shape[:2], 1))
+                    norm_cfg_stds = torch.tensor(norm_cfg['std']).view(1, 1, 3).repeat((*input_img_torch.shape[:2], 1))
+                
+                input_img_torch = input_img_torch * norm_cfg_stds + norm_cfg_means
+                input_img_numpy = input_img_torch.cpu().numpy()
+                result_downsampled = F.interpolate(result.float().unsqueeze(0).unsqueeze(0),
+                                                   size=input_img_torch.shape[:2], mode='nearest').squeeze()
+                runner.model.module.show_result(input_img_numpy, result_downsampled.unsqueeze(0),
+                                                palette=self.dataloader.dataset.PALETTE,
+                                                out_file=output_fn)
 
     def after_train_epoch(self, runner):
         """After train epoch hook."""

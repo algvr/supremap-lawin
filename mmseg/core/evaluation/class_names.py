@@ -114,6 +114,7 @@ def voc_palette():
 dataset_aliases = {
     'cityscapes': ['cityscapes'],
     'ade': ['ade', 'ade20k'],
+    'dummy': ['dummy'],
     'voc': ['voc', 'pascal_voc', 'voc12', 'voc12aug']
 }
 

@@ -60,10 +60,16 @@ def _concat_dataset(cfg, default_args=None):
 
 def build_dataset(cfg, default_args=None):
     """Build datasets."""
+
+    img_norm_cfg = getattr(cfg, 'img_norm_cfg', None)
+    if hasattr(cfg, 'img_norm_cfg'):
+        del cfg.img_norm_cfg
+
     from .dataset_wrappers import ConcatDataset, RepeatDataset
     if isinstance(cfg, (list, tuple)):
         dataset = ConcatDataset([build_dataset(c, default_args) for c in cfg])
     elif cfg['type'] == 'RepeatDataset':
+        cfg['dataset'].img_norm_cfg = img_norm_cfg
         dataset = RepeatDataset(
             build_dataset(cfg['dataset'], default_args), cfg['times'])
     elif isinstance(cfg.get('img_dir'), (list, tuple)) or isinstance(
@@ -72,6 +78,7 @@ def build_dataset(cfg, default_args=None):
     else:
         dataset = build_from_cfg(cfg, DATASETS, default_args)
 
+    dataset.img_norm_cfg = img_norm_cfg
     return dataset
 
 

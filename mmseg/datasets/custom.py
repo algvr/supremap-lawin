@@ -377,4 +377,5 @@ class CustomDataset(Dataset):
         if mmcv.is_list_of(results, str):
             for file_name in results:
                 os.remove(file_name)
+
         return eval_results

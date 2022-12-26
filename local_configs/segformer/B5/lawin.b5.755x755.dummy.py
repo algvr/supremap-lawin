@@ -6,15 +6,17 @@ _base_ = [
 ]
 
 # data settings
-dataset_type = 'ADE20KDataset'
-data_root = './data/ADEChallengeData2016'
+
+# the dataset_type does not seem to make any significant difference
+dataset_type = 'DummyDataset'
+data_root = './data/dummy_2512'
 img_norm_cfg = dict(
-    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
+    mean=[95.9299, 107.8258, 98.2539], std=[45.9565, 41.4646, 41.5006], to_rgb=True)
 crop_size = (640, 640)
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', reduce_zero_label=True),
-    dict(type='Resize', img_scale=(2048, 640), ratio_range=(0.5, 2.0)),
+    dict(type='Resize', img_scale=(640, 640), ratio_range=(1.0, 1.0)),
     dict(type='RandomCrop', crop_size=crop_size, cat_max_ratio=0.75),
     dict(type='RandomFlip', prob=0.5),
     dict(type='PhotoMetricDistortion'),
@@ -27,7 +29,7 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(2048, 640),
+        img_scale=(640, 640),
         # img_ratios=[0.5, 0.75, 1.0, 1.25, 1.5, 1.75],
         flip=False,
         transforms=[
@@ -78,12 +80,13 @@ model = dict(
         in_index=[0, 1, 2, 3],
         channels=128,
         dropout_ratio=0.1,
-        num_classes=150,
+        num_classes=7,
         norm_cfg=norm_cfg,
         align_corners=False,
         concat_fuse=True,
         depth=1,
-        decoder_params=dict(embed_dim=512, in_dim=512, reduction=2, proj_type='conv', use_scale=True, mixing=True),
+        decoder_params=dict(embed_dim=512, in_dim=512, reduction=2, proj_type='conv',
+                            use_scale=True, mixing=True),
         loss_decode=dict(type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0)),
     # model training and testing settings
     train_cfg=dict(),
@@ -102,5 +105,4 @@ lr_config = dict(_delete_=True, policy='poly',
                  warmup_ratio=1e-6,
                  power=1.0, min_lr=0.0, by_epoch=False)
 
-evaluation = dict(interval=4000, metric='mIoU')
-
+evaluation = dict(interval=100, metric='mIoU')

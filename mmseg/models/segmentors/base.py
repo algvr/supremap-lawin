@@ -94,7 +94,8 @@ class BaseSegmentor(nn.Module):
                              f'num of image meta ({len(img_metas)})')
         # all images in the same aug batch all of the same ori_shape and pad
         # shape
-        for img_meta in img_metas:
+        for _img_meta in img_metas:
+            img_meta = _img_meta.data[0]
             ori_shapes = [_['ori_shape'] for _ in img_meta]
             assert all(shape == ori_shapes[0] for shape in ori_shapes)
             img_shapes = [_['img_shape'] for _ in img_meta]
@@ -237,7 +238,7 @@ class BaseSegmentor(nn.Module):
         img = img.copy()
         seg = result[0]
         if palette is None:
-            if self.PALETTE is None:
+            if not hasattr(self, 'PALETTE') or self.PALETTE is None:
                 palette = np.random.randint(
                     0, 255, size=(len(self.CLASSES), 3))
             else:
