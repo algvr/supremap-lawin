@@ -2,11 +2,11 @@
 log_config = dict(
     interval=50,
     hooks=[
-        dict(type='TextLoggerHook', by_epoch=False),
-        dict(type='WandbLoggerHook', init_kwargs={'entity': 'gsaltintas', 'project': 'supremap'}
+        dict(type='TextLoggerHook', by_epoch=False) # ,
+        # dict(type='WandbLoggerHook', init_kwargs={'entity': 'gsaltintas', 'project': 'supremap'}
              # importing wandb does not work
              # settings=wandb.Settings(start_method='fork'))
-            )
+        #)
         # dict(type='TensorboardLoggerHook')
     ])
 # yapf:enable

@@ -6,6 +6,7 @@ from .custom import CustomDataset
 from .dataset_wrappers import ConcatDataset, RepeatDataset
 from .drive import DRIVEDataset
 from .dummy import DummyDataset
+from .imaginaire import ImaginaireDataset
 from .hrf import HRFDataset
 from .pascal_context import PascalContextDataset
 from .stare import STAREDataset
@@ -16,6 +17,6 @@ from .cocostuff import CocoStuff
 __all__ = [
     'CustomDataset', 'build_dataloader', 'ConcatDataset', 'RepeatDataset',
     'DATASETS', 'build_dataset', 'PIPELINES', 'CityscapesDataset',
-    'PascalVOCDataset', 'ADE20KDataset', 'DummyDataset', 'PascalContextDataset',
+    'PascalVOCDataset', 'ADE20KDataset', 'DummyDataset', 'ImaginaireDataset', 'PascalContextDataset',
     'ChaseDB1Dataset', 'DRIVEDataset', 'HRFDataset', 'STAREDataset', 'MapillaryDataset', 'CocoStuff'
 ]

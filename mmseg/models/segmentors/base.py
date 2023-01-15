@@ -95,7 +95,10 @@ class BaseSegmentor(nn.Module):
         # all images in the same aug batch all of the same ori_shape and pad
         # shape
         for _img_meta in img_metas:
-            img_meta = _img_meta.data[0]
+            if hasattr(_img_meta, 'data'):
+                img_meta = _img_meta.data[0]
+            else:
+                img_meta = _img_meta
             ori_shapes = [_['ori_shape'] for _ in img_meta]
             assert all(shape == ori_shapes[0] for shape in ori_shapes)
             img_shapes = [_['img_shape'] for _ in img_meta]

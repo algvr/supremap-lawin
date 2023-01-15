@@ -11,7 +11,7 @@ class DummyDataset(CustomDataset):
 
     def __init__(self, **kwargs):
         super(DummyDataset, self).__init__(
-            img_suffix='.jpg',
+            img_suffix='.png',
             seg_map_suffix='.png',
             reduce_zero_label=False,
             **kwargs)

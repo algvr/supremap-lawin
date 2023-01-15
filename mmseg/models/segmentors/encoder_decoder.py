@@ -205,7 +205,7 @@ class EncoderDecoder(BaseSegmentor):
         if rescale:
             preds = resize(
                 preds,
-                size=img_meta.data[0][0]['ori_shape'][:2],
+                size=getattr(img_meta, 'data', [img_meta])[0][0]['ori_shape'][:2],
                 mode='bilinear',
                 align_corners=self.align_corners,
                 warning=False)
@@ -218,7 +218,7 @@ class EncoderDecoder(BaseSegmentor):
         if rescale:
             seg_logit = resize(
                 seg_logit,
-                size=img_meta.data[0][0]['ori_shape'][:2],
+                size=getattr(img_meta, 'data', [img_meta])[0][0]['ori_shape'][:2],
                 mode='bilinear',
                 align_corners=self.align_corners,
                 warning=False)
@@ -242,16 +242,16 @@ class EncoderDecoder(BaseSegmentor):
         """
 
         assert self.test_cfg.mode in ['slide', 'whole']
-        ori_shape = img_meta.data[0][0]['ori_shape']
-        assert all(_[0]['ori_shape'] == ori_shape for _ in img_meta.data)
+        ori_shape = getattr(img_meta, 'data', [img_meta])[0][0]['ori_shape']
+        
         if self.test_cfg.mode == 'slide':
             seg_logit = self.slide_inference(img, img_meta, rescale)
         else:
             seg_logit = self.whole_inference(img, img_meta, rescale)
         output = F.softmax(seg_logit, dim=1)
-        flip = img_meta.data[0][0]['flip']
+        flip = getattr(img_meta, 'data', [img_meta])[0][0]['flip']
         if flip:
-            flip_direction = img_meta.data[0][0]['flip_direction']
+            flip_direction = getattr(img_meta, 'data', [img_meta])[0][0]['flip_direction']
             assert flip_direction in ['horizontal', 'vertical']
             if flip_direction == 'horizontal':
                 output = output.flip(dims=(3, ))

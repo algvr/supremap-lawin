@@ -193,7 +193,7 @@ class LAWINHead(BaseDecodeHead):
                                 in_channels=embed_dim*3,
                                 out_channels=in_dim,
                                 kernel_size=1,
-                                norm_cfg=dict(type='SyncBN', requires_grad=True)) if concat_fuse else nn.Identity()
+                                norm_cfg=dict(type='BN', requires_grad=True)) if concat_fuse else nn.Identity()  # SyncBN
         self.linear_pred = nn.Conv2d(in_dim, self.num_classes, kernel_size=1)
 
         ############# Lawin Transformer ###############
@@ -259,7 +259,7 @@ class LAWINHead(BaseDecodeHead):
                                 in_channels=in_dim,
                                 out_channels=in_dim,
                                 kernel_size=1,
-                                norm_cfg=dict(type='SyncBN', requires_grad=True))
+                                norm_cfg=dict(type='BN', requires_grad=True))  # SyncBN
         self.image_pool = nn.Sequential(
                                 nn.AdaptiveAvgPool2d(1), 
                                 ConvModule(in_dim, in_dim, 1, conv_cfg=self.conv_cfg, norm_cfg=self.norm_cfg, act_cfg=self.act_cfg)) 
@@ -267,7 +267,7 @@ class LAWINHead(BaseDecodeHead):
                         in_channels=in_dim*5,
                         out_channels=in_dim,
                         kernel_size=1,
-                        norm_cfg=dict(type='SyncBN', requires_grad=True)) if concat_fuse else nn.Identity()
+                        norm_cfg=dict(type='BN', requires_grad=True)) if concat_fuse else nn.Identity()  # SyncBN
 
         ############### Low-level feature enhancement ###########
         self.linear_c1 = MLP(input_dim=self.in_channels[0], embed_dim=48)
@@ -275,7 +275,7 @@ class LAWINHead(BaseDecodeHead):
                                     in_channels=in_dim+48,
                                     out_channels=in_dim,
                                     kernel_size=1,
-                                    norm_cfg=dict(type='SyncBN', requires_grad=True))
+                                    norm_cfg=dict(type='BN', requires_grad=True))  # SyncBN
 
     def get_query(self, x, patch_size):
         n, _, h, w = x.shape
