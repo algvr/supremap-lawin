@@ -12,7 +12,7 @@ Download our datasets into `/data/` and the ImageNet-1K-pretrained Lawin-B5 mode
 ```
 mkdir pretrained
 wget https://algvrithm.com/files/supremap/lawin_trained_on_imagenet1k.pth -O pretrained/mit_b5.pth
-cd data
+mkdir data && cd data
 wget https://algvrithm.com/files/supremap/supremap_lawin_swisstopo_dataset_real.zip
 wget https://algvrithm.com/files/supremap/supremap_lawin_swisstopo_dataset_generated.zip
 unzip supremap_lawin_swisstopo_dataset_real.zip
